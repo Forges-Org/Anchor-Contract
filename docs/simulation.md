@@ -10,6 +10,9 @@ no fees are charged during simulation.
 
 
 
+
+
+
 | Concern | What simulation tells you |
 |---|---|
 | Will the call succeed? | Returns the same error the live call would return |

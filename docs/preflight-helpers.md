@@ -6,6 +6,9 @@ This document describes the preflight helper system that gates state-changing (m
 
 ## Problem Statement
 
+
+
+
 The Anchor shipment contract uses a two-tier storage model:
 - **Persistent Storage**: For active shipments (expensive, long TTL)
 - **Temporary Storage**: For archived shipments (cheaper, shorter TTL)
