@@ -115,3 +115,18 @@ fn unknown_anchor_cannot_be_attested_or_queried() {
         Err(Ok(RegistryError::UnknownAnchor))
     );
 }
+
+#[test]
+fn registered_anchor_without_reports_has_no_health_yet() {
+    let (env, client, admin, reporter, anchor_id) = setup();
+    register_anchor(&env, &client, &admin, &reporter, &anchor_id);
+
+    assert_eq!(
+        client.try_get_health(&anchor_id),
+        Err(Ok(RegistryError::NoAttestation))
+    );
+    assert_eq!(
+        client.get_attestation_count(&anchor_id),
+        0
+    );
+}
