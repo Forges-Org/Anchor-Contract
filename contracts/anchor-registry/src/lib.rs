@@ -19,6 +19,7 @@ pub enum RegistryError {
     InvalidTimestamp = 7,
     InvalidHistoryPage = 8,
     ArithmeticError = 9,
+    NoAttestation = 10,
 }
 
 #[contracttype]
@@ -89,7 +90,7 @@ impl AnchorRegistry {
             .persistent()
             .set(&DataKey::AttestationCount(anchor_id.clone()), &0u32);
         env.events()
-            .publish((symbol_short!("registered"), anchor_id), metadata.reporter);
+            .publish((symbol_short!("register"), anchor_id), metadata.reporter);
         Ok(())
     }
 
@@ -173,7 +174,7 @@ impl AnchorRegistry {
         env.storage()
             .persistent()
             .get(&DataKey::LatestAttestation(anchor_id))
-            .ok_or(RegistryError::UnknownAnchor)
+            .ok_or(RegistryError::NoAttestation)
     }
 
     pub fn health_history(

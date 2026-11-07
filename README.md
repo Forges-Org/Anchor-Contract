@@ -2,6 +2,10 @@
 
 **Real-time fiat corridor health monitoring and smart routing for Stellar anchors.**
 
+This workspace currently contains Soroban contracts. The monitoring engine,
+REST API, database, and dashboard described below are planned platform
+components and are not included in this repository yet.
+
 AnchorFlow continuously probes anchors across every registered corridor, aggregates live fee and reliability data, and exposes a routing API that always returns the best available anchor for a given asset pair and destination country. A Soroban smart contract acts as the on-chain source of truth — health attestations are written every epoch and queryable by any contract on Stellar, with no trust in AnchorFlow's server required.
 
 > Organization: **StellarForge** — forging the infrastructure layer of the Stellar ecosystem.  
@@ -129,12 +133,18 @@ Provides route recommendations directly on-chain.
 
 | Function | Description |
 |----------|-------------|
-| `register_anchor(id, meta)` | Register an anchor and its metadata |
-| `attest_health(anchor_id, score, ts)` | Record a health attestation |
-| `get_health(anchor_id)` | Retrieve latest health score |
-| `get_route(asset, country_code)` | Return highest-ranked route |
-| `list_anchors(asset)` | List compatible anchors |
-| `health_history(anchor_id, from, limit)` | Retrieve historical health data |
+| `initialize(admin)` | Initialize the registry with its administrator |
+| `register_anchor(admin, anchor_id, metadata)` | Register an anchor and its authorized health reporter |
+| `get_anchor(anchor_id)` | Retrieve registered anchor metadata |
+| `attest_health(reporter, anchor_id, score, timestamp)` | Record an authenticated health score from 0 to 100 |
+| `get_health(anchor_id)` | Retrieve the latest health attestation |
+| `get_attestation_count(anchor_id)` | Retrieve the number of attestations |
+| `health_history(anchor_id, from, limit)` | Retrieve a page of history by zero-based sequence; page limit is 50 |
+
+Only the registry administrator can register anchors. The reporter assigned to
+an anchor must authorize each attestation; timestamps must not be in the future
+or move backward. Historical records are append-only and paginated by sequence.
+Route selection and asset-based anchor queries remain roadmap items.
 
 ---
 
